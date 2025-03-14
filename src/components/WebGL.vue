@@ -10,16 +10,16 @@
 <script setup>
 import { shallowRef, onMounted, nextTick, watch } from 'vue'
 import { useWindowSize, useDevicePixelRatio } from '@vueuse/core'
-import { Scene, PerspectiveCamera, Mesh, BoxGeometry } from 'three'
+import { Scene, PerspectiveCamera, Mesh, PlaneGeometry } from 'three'
 import { WebGPURenderer } from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
-import { SampleTSLMaterial } from '@/assets/materials'
+import { SampleTSLMaterial, VortexMaterial } from '@/assets/materials'
 import { gltfLoader } from '@/assets/loaders'
 
 const canvasRef = shallowRef(null)
-let scene, camera, renderer, mesh, controls
+let scene, camera, renderer, planeMesh, controls
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { pixelRatio: dpr } = useDevicePixelRatio()
@@ -36,9 +36,7 @@ onMounted(async () => {
 	createCamera()
 	createRenderer()
 
-	createMesh()
-
-	await loadModel()
+	createPlane()
 
 	createControls()
 
@@ -72,7 +70,6 @@ watch([windowWidth, windowHeight], value => {
 //
 function updateScene(time = 0) {
 	controls.update()
-	mesh.rotation.set(time * 0.2, time * 0.13, time * 0.17)
 }
 
 function createScene() {
@@ -81,12 +78,12 @@ function createScene() {
 
 function createCamera() {
 	camera = new PerspectiveCamera(
-		75,
+		40,
 		windowWidth.value / windowHeight.value,
 		0.1,
 		100
 	)
-	camera.position.set(0, 0, 2.5)
+	camera.position.set(0, 0, 3)
 }
 
 function createRenderer() {
@@ -115,14 +112,13 @@ function createControls() {
 	controls.enableDamping = true
 }
 
-function createMesh() {
-	const geometry = new BoxGeometry()
-	const material = SampleTSLMaterial
+function createPlane() {
+	const geometry = new PlaneGeometry(2, 2, 1, 1)
+	const material = VortexMaterial
 
-	mesh = new Mesh(geometry, material)
-	mesh.position.x = -1
+	planeMesh = new Mesh(geometry, material)
 
-	scene.add(mesh)
+	scene.add(planeMesh)
 }
 </script>
 
