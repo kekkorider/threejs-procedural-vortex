@@ -47,7 +47,7 @@ onMounted(async () => {
 
 	const url = new URL(window.location.href)
 	if (url.searchParams.get('debug') !== null) {
-		await import('@/assets/Debug')
+		await import('@/assets/DebugVortex')
 	}
 })
 
@@ -113,7 +113,7 @@ function createControls() {
 }
 
 function createPlane() {
-	const geometry = new PlaneGeometry(2, 2, 1, 1)
+	const geometry = new PlaneGeometry(2, 2, 32, 32)
 	const material = VortexMaterial
 
 	planeMesh = new Mesh(geometry, material)

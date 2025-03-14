@@ -1,5 +1,23 @@
 import { MeshBasicNodeMaterial } from 'three/webgpu'
-import { Fn, vec2, vec3, vec4, uv, uniform, normalize, time, mul, float, log2, length, cos, sin, pow, mix } from 'three/tsl'
+import {
+  Fn,
+  vec2,
+  vec3,
+  vec4,
+  uv,
+  uniform,
+  normalize,
+  time,
+  mul,
+  float,
+  log2,
+  length,
+  cos,
+  sin,
+  pow,
+  mix,
+  varying
+} from 'three/tsl'
 import { fbm3d } from '@/assets/tsl/fbm'
 import { facture, emission } from '@/assets/tsl/utils'
 
@@ -9,11 +27,13 @@ export const VortexMaterial = new MeshBasicNodeMaterial({
 })
 
 const resolution = uniform(vec2(2, 2))
-const speed = uniform(1)
-const frequency = uniform(3)
-const distortion = uniform(0.01)
-const emissionColor = uniform(vec3(0.1, 0.6, 0))
-const emissionMultiplier = uniform(2)
+export const speed = uniform(0.25)
+export const frequency = uniform(1.3)
+export const distortion = uniform(0.01)
+export const emissionColor = uniform(vec3(0.1, 0.6, 1))
+export const emissionMultiplier = uniform(2)
+
+const vSwirl = varying(vec4(0), 'vSwirl')
 
 const rotateZ = Fn( ([v_immutable, angle_immutable]) => {
   const angle = float(angle_immutable).toVar()
